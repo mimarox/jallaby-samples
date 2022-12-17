@@ -1,0 +1,40 @@
+<!DOCTYPE state-machine SYSTEM "http://jallaby.org/jallaby-beans-1.0.dtd">
+<state-machine name="SmartPhone" initial-state="SwitchedOff">
+	
+	<!-- Events -->
+	<event name="switchOn" />
+	<event name="startApp">
+		<property name="app" type="string" />
+	</event>
+	<event name="stopApp">
+		<property name="app" type="string" />
+	</event>
+	<event name="switchOff" />
+	<event name="finished" />
+	
+	<!-- States -->
+	<state name="SwitchedOff">
+		<transition to="Idle">
+			<event-ref name="switchOn" />
+		</transition>
+	</state>
+	<state name="SwitchedOn" />
+	<state name="Idle" extends="SwitchedOn">
+		<transition to="StartingApp">
+			<event-ref name="startApp" />
+		</transition>
+		<transition to="StoppingApp">
+			<event-ref name="stopApp" />
+		</transition>
+		<transition to="SwitchedOff">
+			<event-ref name="switchOff" />
+		</transition>
+	</state>
+	<state name="Finishable" extends="SwitchedOn" modifier="abstract">
+		<transition to="Idle">
+			<event-ref name="finished" />
+		</transition>
+	</state>
+	<state name="StartingApp" extends="Finishable" />
+	<state name="StoppingApp" extends="Finishable" />
+</state-machine>
